@@ -1,4 +1,4 @@
-# tui
+# telegrafctl
 
 > Ein kleines Terminal-UI (TUI) Projekt in Rust.
 
