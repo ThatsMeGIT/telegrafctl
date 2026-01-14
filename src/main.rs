@@ -21,7 +21,7 @@ fn main() {
     // User Input
     stdin().read_line(&mut input).unwrap();
     let filepath = input.trim().to_string();
-    println!("{}", filepath);
+    //###### DEBUG println!("{}", filepath);
 
     // Read file
     read_file(&filepath);

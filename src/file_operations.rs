@@ -2,10 +2,11 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 
-pub fn read_file(filepath: &str) {
+pub fn read_file(mut filepath: &str) {
     let mut counter: i32 = 0;
 
     // String säubern
+    filepath = filepath.trim_matches('"');
 
 
     // Datei öffnen
