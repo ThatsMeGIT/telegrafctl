@@ -1,6 +1,6 @@
 # telegrafctl
 
-> Ein kleines Terminal-UI (TUI) Projekt in Rust.
+> Ein kleines Terminal-UI (TUI) Projekt in Rust um die Config von Telegraf anzupassen
 
 Dieses Tool soll dabei helfen die Config von Telegraf auszulesen und anzupassen.
 Durch das nutzen dieses Tools muss man die Syntax selbst nicht beachten & kann Änderungen schnell und einfach ausliefern.
