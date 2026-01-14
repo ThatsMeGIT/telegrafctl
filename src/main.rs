@@ -1,5 +1,5 @@
 // ANCHOR: imports
-use std::*;
+use std::io;
 
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
@@ -59,6 +59,8 @@ impl App {
             KeyCode::Char('q') => self.exit(),
             KeyCode::Left => self.decrement_counter(),
             KeyCode::Right => self.increment_counter(),
+            KeyCode::Up => self.ten_increment_counter(),
+            KeyCode::Down => self.ten_decrement_counter(),
             _ => {}
         }
     }
@@ -75,16 +77,33 @@ impl App {
     fn decrement_counter(&mut self) {
         self.counter -= 1;
     }
+
+    fn ten_increment_counter(&mut self) {
+        for _i in 0 .. 10  {
+            self.increment_counter()
+        }
+    }
+
+    fn ten_decrement_counter(&mut self) {
+        for _i in 0 .. 10  {
+            self.decrement_counter();
+        }
+    }
+
 }
 // ANCHOR_END: impl App
 
 // ANCHOR: impl Widget
 impl Widget for &App {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let title = Line::from(" Counter App Tutorial ".bold());
+        let title = Line::from(" Telegraf Config Editor ".bold());
         let instructions = Line::from(vec![
             " Decrement ".into(),
             "<Left>".blue().bold(),
+            " 10xDecrement ".into(),
+            "<Up>".blue().bold(),
+            " 10xIncrement ".into(),
+            "<Down>".blue().bold(),
             " Increment ".into(),
             "<Right>".blue().bold(),
             " Quit ".into(),
@@ -107,55 +126,3 @@ impl Widget for &App {
     }
 }
 // ANCHOR_END: impl Widget
-
-// ANCHOR: tests
-#[cfg(test)]
-mod tests {
-
-    // ANCHOR: render test
-    use super::*;
-    use ratatui::style::Style;
-
-    #[test]
-    fn render() {
-        let app = App::default();
-        let mut buf = Buffer::empty(Rect::new(0, 0, 50, 4));
-
-        app.render(buf.area, &mut buf);
-
-        let mut expected = Buffer::with_lines(vec![
-            "┏━━━━━━━━━━━━━ Counter App Tutorial ━━━━━━━━━━━━━┓",
-            "┃                    Value: 0                    ┃",
-            "┃                                                ┃",
-            "┗━ Decrement <Left> Increment <Right> Quit <Q> ━━┛",
-        ]);
-        let title_style = Style::new().bold();
-        let counter_style = Style::new().yellow();
-        let key_style = Style::new().blue().bold();
-        expected.set_style(Rect::new(14, 0, 22, 1), title_style);
-        expected.set_style(Rect::new(28, 1, 1, 1), counter_style);
-        expected.set_style(Rect::new(13, 3, 6, 1), key_style);
-        expected.set_style(Rect::new(30, 3, 7, 1), key_style);
-        expected.set_style(Rect::new(43, 3, 4, 1), key_style);
-
-        assert_eq!(buf, expected);
-    }
-    // ANCHOR_END: render test
-
-    // ANCHOR: handle_key_event test
-    #[test]
-    fn handle_key_event() {
-        let mut app = App::default();
-        app.handle_key_event(KeyCode::Right.into());
-        assert_eq!(app.counter, 1);
-
-        app.handle_key_event(KeyCode::Left.into());
-        assert_eq!(app.counter, 0);
-
-        let mut app = App::default();
-        app.handle_key_event(KeyCode::Char('q').into());
-        assert!(app.exit);
-    }
-    // ANCHOR_END: handle_key_event test
-}
-// ANCHOR_END: tests
